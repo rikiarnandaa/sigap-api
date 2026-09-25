@@ -4,7 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use PHPOpenSourceSaver\JWTAuth\JWTGuard;
 use Symfony\Component\HttpFoundation\Response;
 
 class EnsureUserIsActive
@@ -14,9 +14,9 @@ class EnsureUserIsActive
         $user = $request->user();
 
         if ($user && ! $user->is_active) {
-            Auth::guard('web')->logout();
-            $request->session()->invalidate();
-            $request->session()->regenerateToken();
+            /** @var JWTGuard $guard */
+            $guard = auth('api');
+            $guard->logout(); // token langsung dimasukkan ke blacklist
 
             return response()->json([
                 'message' => 'Akun Anda dinonaktifkan. Hubungi administrator.',

@@ -14,9 +14,6 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        // Aktifkan autentikasi cookie/session untuk route /api
-        $middleware->statefulApi();
-
         $middleware->alias([
             'active' => EnsureUserIsActive::class,
         ]);
